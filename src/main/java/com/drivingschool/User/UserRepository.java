@@ -1,5 +1,5 @@
 package com.drivingschool.User;
 
-public class UserRepository {
+public interface UserRepository {
     
 }
