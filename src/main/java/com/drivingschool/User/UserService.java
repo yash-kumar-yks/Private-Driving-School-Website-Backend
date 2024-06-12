@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -59,6 +58,7 @@ public class UserService {
         user.setName(userRequestDTO.getName());
         user.setAddress(userRequestDTO.getAddress());
         user.setNumber(userRequestDTO.getPhoneNumber());
+        // Blogs are handled separately
         return user;
     }
 }
