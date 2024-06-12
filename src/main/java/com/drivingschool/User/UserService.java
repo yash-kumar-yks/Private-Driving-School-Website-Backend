@@ -59,7 +59,6 @@ public class UserService {
         user.setName(userRequestDTO.getName());
         user.setAddress(userRequestDTO.getAddress());
         user.setNumber(userRequestDTO.getPhoneNumber());
-        // Blogs are handled separately
         return user;
     }
 }
