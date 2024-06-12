@@ -13,15 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(path = "/Users")
 
 public class UserController {
-    private final UserService userservice;
-
-    @Autowired
-    public UserController(UserService userService){
-        this.userservice=userService;
-    }
+    
+    
     @GetMapping
-    public User GetUser(@RequestParam String mail) {
-        return userservice.GetUser(mail);
+    public User GetUser() {
+        return new User();
     }
     
 
