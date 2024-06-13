@@ -12,18 +12,19 @@ import java.util.List;
 @RequestMapping("/api/blogs")
 public class BlogController {
 
-    @Autowired
-    private BlogService blogService;
-
-    @GetMapping
-    public List<BlogResponseDTO> getAllBlogs() {
-        return blogService.getAllBlogs();
+    
+        @Autowired
+        private BlogService blogService;
+    
+        @GetMapping
+        public List<BlogResponseDTO> getAllBlogs() {
+            return blogService.getAllBlogs();
+        }
+    
+        @GetMapping("/user/{email}")
+        public ResponseEntity<List<BlogResponseDTO>> getBlogsByUserEmail(@PathVariable String email) {
+            List<BlogResponseDTO> blogs = blogService.getBlogsByUserEmail(email);
+            return blogs != null ? ResponseEntity.ok(blogs) : ResponseEntity.notFound().build();
+        }
     }
-
-    @GetMapping("/user/{email}")
-    public ResponseEntity<List<BlogResponseDTO>> getBlogsByUserEmail(@PathVariable String email) {
-        List<BlogResponseDTO> blogs = blogService.getBlogsByUserEmail(email);
-        return blogs != null ? ResponseEntity.ok(blogs) : ResponseEntity.notFound().build();
-    }
-}
-
+    

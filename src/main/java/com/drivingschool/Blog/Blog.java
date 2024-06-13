@@ -1,13 +1,14 @@
 package com.drivingschool.Blog;
 
-import com.drivingschool.User.User;
+import com.drivingschool.RegisterdUsers.DrivingUser;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
+@Entity
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +19,7 @@ public class Blog {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private DrivingUser user;
 
     public Long getId() {
         return id;
@@ -44,11 +45,11 @@ public class Blog {
         this.content = content;
     }
 
-    public User getUser() {
+    public DrivingUser getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(DrivingUser user) {
         this.user = user;
     }
 

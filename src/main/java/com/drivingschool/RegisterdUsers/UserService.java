@@ -1,14 +1,15 @@
-package com.drivingschool.User;
+package com.drivingschool.RegisterdUsers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.drivingschool.Blog.Blog;
-import com.drivingschool.User.Dto.UserRequestDTO;
-import com.drivingschool.User.Dto.UserResponseDTO;
+import com.drivingschool.RegisterdUsers.Dto.UserRequestDTO;
+import com.drivingschool.RegisterdUsers.Dto.UserResponseDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,13 +26,13 @@ public class UserService {
     }
 
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        User user = convertToEntity(userRequestDTO);
+        DrivingUser user = convertToEntity(userRequestDTO);
         userRepository.save(user);
         return convertToResponseDTO(user);
     }
 
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        DrivingUser user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setName(userRequestDTO.getName());
         user.setAddress(userRequestDTO.getAddress());
         user.setNumber(userRequestDTO.getPhoneNumber());
@@ -39,11 +40,13 @@ public class UserService {
         return convertToResponseDTO(user);
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    
+    public DrivingUser findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                             .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    private UserResponseDTO convertToResponseDTO(User user) {
+    private UserResponseDTO convertToResponseDTO(DrivingUser user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setId(user.getId());
         userResponseDTO.setName(user.getName());
@@ -53,8 +56,8 @@ public class UserService {
         return userResponseDTO;
     }
 
-    private User convertToEntity(UserRequestDTO userRequestDTO) {
-        User user = new User();
+    private DrivingUser convertToEntity(UserRequestDTO userRequestDTO) {
+        DrivingUser user = new DrivingUser();
         user.setName(userRequestDTO.getName());
         user.setAddress(userRequestDTO.getAddress());
         user.setNumber(userRequestDTO.getPhoneNumber());

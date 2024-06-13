@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.drivingschool.Blog.Dtos.BlogResponseDTO;
-import com.drivingschool.User.User;
-import com.drivingschool.User.UserRepository;
+import com.drivingschool.RegisterdUsers.DrivingUser;
+import com.drivingschool.RegisterdUsers.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +25,8 @@ public class BlogService {
     }
 
     public List<BlogResponseDTO> getBlogsByUserEmail(String email) {
-        User user = userRepository.findByEmail(email);
+        DrivingUser user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getBlogs().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package com.drivingschool.User.Dto;
+package com.drivingschool.RegisterdUsers.Dto;
 import java.util.List;
 
 

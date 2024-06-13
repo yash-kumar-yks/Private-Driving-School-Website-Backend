@@ -1,4 +1,4 @@
-package com.drivingschool.User;
+package com.drivingschool.RegisterdUsers;
 
 
 
@@ -6,7 +6,9 @@ import java.util.List;
 
 import com.drivingschool.Blog.Blog;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,19 +16,26 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table
-public class User{
+
+public class DrivingUser{
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
     private String Name;
     private String Address;
     private String number;
- @OneToMany(mappedBy = "user")
+    private String email;
+ @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Blog> blogs;
 
     public Long getId() {
         return id;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
     public List<Blog> getBlogs() {
         return blogs;
@@ -55,4 +64,5 @@ public class User{
     public void setNumber(String number) {
         this.number = number;
     }
+    
 }

@@ -1,5 +1,7 @@
 package com.drivingschool.Blog;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public class BlogRepository {
-    
+@Repository
+public interface BlogRepository extends JpaRepository<Blog, Long> {
 }

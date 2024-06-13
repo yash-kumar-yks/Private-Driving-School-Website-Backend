@@ -3,7 +3,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drivingschool.User.User;
+import com.drivingschool.RegisterdUsers.DrivingUser;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -17,8 +17,8 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 	@GetMapping("/")
-	public User Hello(){
-		return new User();
+	public DrivingUser Hello(){
+		return new DrivingUser();
 	}
 	
 	
