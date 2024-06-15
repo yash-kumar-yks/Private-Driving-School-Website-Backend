@@ -1,15 +1,25 @@
 package com.drivingschool.RegisterdUsers.Dto;
 import java.util.List;
 
+import com.drivingschool.Blog.Dtos.BlogDTO;
+
 
 public class UserRequestDTO {
 
     private String name;
     private String address;
+  
     private String phoneNumber;
-    private List<Long> blogIds;
+    private String email;
+    private List<BlogDTO> blogs;
     public String getName() {
         return name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
     public void setName(String name) {
         this.name = name;
@@ -26,11 +36,11 @@ public class UserRequestDTO {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    public List<Long> getBlogIds() {
-        return blogIds;
+    public List<BlogDTO> getBlogs() {
+        return blogs;
     }
-    public void setBlogIds(List<Long> blogIds) {
-        this.blogIds = blogIds;
+    public void setBlogs(List<BlogDTO> blogs) {
+        this.blogs = blogs;
     }
 
     

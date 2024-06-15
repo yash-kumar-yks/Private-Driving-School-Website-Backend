@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.drivingschool.Blog.Blog;
+import com.drivingschool.Blog.Dtos.BlogDTO;
 import com.drivingschool.RegisterdUsers.Dto.UserRequestDTO;
 import com.drivingschool.RegisterdUsers.Dto.UserResponseDTO;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,23 +26,25 @@ public class UserService {
     public UserResponseDTO getUserById(Long id) {
         return userRepository.findById(id).map(this::convertToResponseDTO).orElse(null);
     }
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 
+    public List<BlogDTO> getBlogsByUserEmail(String email) {
+        Optional<DrivingUser> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            DrivingUser user = optionalUser.get();
+            return user.getBlogs().stream().map(this::convertToBlogDTO).collect(Collectors.toList());
+        }
+        return Collections.emptyList(); 
+    }
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         DrivingUser user = convertToEntity(userRequestDTO);
         userRepository.save(user);
         return convertToResponseDTO(user);
     }
 
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
-        DrivingUser user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setName(userRequestDTO.getName());
-        user.setAddress(userRequestDTO.getAddress());
-        user.setNumber(userRequestDTO.getPhoneNumber());
-        userRepository.save(user);
-        return convertToResponseDTO(user);
-    }
-
-    
+ 
     public DrivingUser findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                              .orElseThrow(() -> new RuntimeException("User not found"));
@@ -52,7 +56,17 @@ public class UserService {
         userResponseDTO.setName(user.getName());
         userResponseDTO.setAddress(user.getAddress());
         userResponseDTO.setPhoneNumber(user.getNumber());
-        userResponseDTO.setBlogIds(user.getBlogs().stream().map(Blog::getId).collect(Collectors.toList()));
+        userResponseDTO.setEmail(user.getEmail());
+
+        List<BlogDTO> blogDTOs = user.getBlogs().stream().map(blog -> {
+            BlogDTO blogDTO = new BlogDTO();
+            blogDTO.setUserId(blog.getId());
+            blogDTO.setTitle(blog.getTitle());
+            blogDTO.setContent(blog.getContent());
+            return blogDTO;
+        }).collect(Collectors.toList());
+
+        userResponseDTO.setBlogs(blogDTOs);
         return userResponseDTO;
     }
 
@@ -61,7 +75,24 @@ public class UserService {
         user.setName(userRequestDTO.getName());
         user.setAddress(userRequestDTO.getAddress());
         user.setNumber(userRequestDTO.getPhoneNumber());
-        // Blogs are handled separately
+        user.setEmail(userRequestDTO.getEmail());
+
+        List<Blog> blogs = userRequestDTO.getBlogs().stream().map(blogDTO -> {
+            Blog blog = new Blog();
+            blog.setTitle(blogDTO.getTitle());
+            blog.setContent(blogDTO.getContent());
+            blog.setUser(user);
+            return blog;
+        }).collect(Collectors.toList());
+
+        user.setBlogs(blogs);
         return user;
+    }
+    private BlogDTO convertToBlogDTO(Blog blog) {
+        BlogDTO blogDTO = new BlogDTO();
+        blogDTO.setUserId(blog.getId());
+        blogDTO.setTitle(blog.getTitle());
+        blogDTO.setContent(blog.getContent());
+        return blogDTO;
     }
 }

@@ -16,7 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-
+@Table
 public class DrivingUser{
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -25,8 +25,9 @@ public class DrivingUser{
     private String Address;
     private String number;
     private String email;
- @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Blog> blogs;
+
 
     public Long getId() {
         return id;
@@ -42,6 +43,9 @@ public class DrivingUser{
     }
     public void setBlogs(List<Blog> blogs) {
         this.blogs = blogs;
+        for (Blog blog : blogs) {
+            blog.setUser(this);
+        }
     }
     public void setId(Long id) {
         this.id = id;

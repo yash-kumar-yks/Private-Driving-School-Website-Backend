@@ -1,9 +1,10 @@
 package com.drivingschool.Blog.Dtos;
 
-public class BlogRequestDTO {
+public class BlogDTO {
     private String title;
     private String content;
     private Long userId;
+    
     public String getTitle() {
         return title;
     }
