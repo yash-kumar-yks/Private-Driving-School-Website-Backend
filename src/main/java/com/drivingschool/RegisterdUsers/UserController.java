@@ -52,4 +52,9 @@ public class UserController {
         return userService.createUser(userRequestDTO);
     }
 
+    @PostMapping("/{email}/blogs")
+    public UserResponseDTO addBlogsToUser(@PathVariable String email, @RequestBody List<BlogDTO> blogDTOs) {
+        return userService.addBlogsToUser(email, blogDTOs);
+    }
+
 }

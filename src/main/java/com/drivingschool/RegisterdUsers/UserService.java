@@ -95,4 +95,29 @@ public class UserService {
         blogDTO.setContent(blog.getContent());
         return blogDTO;
     }
+
+    public UserResponseDTO addBlogsToUser(String email, List<BlogDTO> blogDTOs) {
+        Optional<DrivingUser> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            DrivingUser user = optionalUser.get();
+            List<Blog> blogs = blogDTOs.stream().map(blogDTO -> {
+                Blog blog = new Blog();
+                blog.setTitle(blogDTO.getTitle());
+                blog.setContent(blogDTO.getContent());
+                blog.setUser(user);
+                return blog;
+            }).collect(Collectors.toList());
+
+            user.getBlogs().addAll(blogs);
+            userRepository.save(user);
+            return convertToResponseDTO(user);
+        } else {
+            throw new UserNotFoundException("User with email " + email + " not found.");
+        }
+    }
+    public class UserNotFoundException extends RuntimeException {
+        public UserNotFoundException(String message) {
+            super(message);
+        }
+    }
 }
