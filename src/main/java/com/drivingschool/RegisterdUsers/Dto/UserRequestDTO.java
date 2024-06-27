@@ -11,6 +11,13 @@ public class UserRequestDTO {
   
     private String phoneNumber;
     private String email;
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    private String password;
     private List<BlogDTO> blogs;
     public String getName() {
         return name;

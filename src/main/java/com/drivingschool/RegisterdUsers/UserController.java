@@ -34,6 +34,10 @@ public class UserController {
     public List<BlogDTO> getBlogsByUserEmail(@PathVariable String email) {
         return userService.getBlogsByUserEmail(email);
     }
+    @GetMapping("/email/{email}")
+    public UserResponseDTO getUserByEmail(@PathVariable String email) {
+        return userService.findUserByEmail(email);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {

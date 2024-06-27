@@ -25,6 +25,13 @@ public class DrivingUser{
     private String Address;
     private String number;
     private String email;
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Blog> blogs;
 

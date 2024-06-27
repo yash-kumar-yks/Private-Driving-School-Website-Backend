@@ -3,7 +3,7 @@ package com.drivingschool.RegisterdUsers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.drivingschool.Blog.Blog;
 import com.drivingschool.Blog.Dtos.BlogDTO;
 import com.drivingschool.RegisterdUsers.Dto.UserRequestDTO;
@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
@@ -45,9 +47,10 @@ public class UserService {
     }
 
  
-    public DrivingUser findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
+    public UserResponseDTO findUserByEmail(String email) {
+        DrivingUser user = userRepository.findByEmail(email)
                              .orElseThrow(() -> new RuntimeException("User not found"));
+                             return convertToResponseDTO(user);
     }
 
     private UserResponseDTO convertToResponseDTO(DrivingUser user) {
@@ -76,7 +79,7 @@ public class UserService {
         user.setAddress(userRequestDTO.getAddress());
         user.setNumber(userRequestDTO.getPhoneNumber());
         user.setEmail(userRequestDTO.getEmail());
-
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         List<Blog> blogs = userRequestDTO.getBlogs().stream().map(blogDTO -> {
             Blog blog = new Blog();
             blog.setTitle(blogDTO.getTitle());
@@ -115,6 +118,14 @@ public class UserService {
             throw new UserNotFoundException("User with email " + email + " not found.");
         }
     }
+    public boolean authenticateUser(String email, String password) {
+        DrivingUser user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        // Check if passwords match. Implement in frontend for login purpose
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
     public class UserNotFoundException extends RuntimeException {
         public UserNotFoundException(String message) {
             super(message);
