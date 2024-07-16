@@ -1,6 +1,5 @@
 package com.drivingschool.RegisterdUsers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +27,7 @@ public class UserService {
     public UserResponseDTO getUserById(Long id) {
         return userRepository.findById(id).map(this::convertToResponseDTO).orElse(null);
     }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
@@ -38,19 +38,19 @@ public class UserService {
             DrivingUser user = optionalUser.get();
             return user.getBlogs().stream().map(this::convertToBlogDTO).collect(Collectors.toList());
         }
-        return Collections.emptyList(); 
+        return Collections.emptyList();
     }
+
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         DrivingUser user = convertToEntity(userRequestDTO);
         userRepository.save(user);
         return convertToResponseDTO(user);
     }
 
- 
     public UserResponseDTO findUserByEmail(String email) {
         DrivingUser user = userRepository.findByEmail(email)
-                             .orElseThrow(() -> new RuntimeException("User not found"));
-                             return convertToResponseDTO(user);
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return convertToResponseDTO(user);
     }
 
     private UserResponseDTO convertToResponseDTO(DrivingUser user) {
@@ -63,7 +63,7 @@ public class UserService {
 
         List<BlogDTO> blogDTOs = user.getBlogs().stream().map(blog -> {
             BlogDTO blogDTO = new BlogDTO();
-            blogDTO.setUserId(blog.getId());
+            blogDTO.setUserId(user.getId());
             blogDTO.setTitle(blog.getTitle());
             blogDTO.setContent(blog.getContent());
             return blogDTO;
@@ -91,6 +91,7 @@ public class UserService {
         user.setBlogs(blogs);
         return user;
     }
+
     private BlogDTO convertToBlogDTO(Blog blog) {
         BlogDTO blogDTO = new BlogDTO();
         blogDTO.setUserId(blog.getId());
@@ -118,12 +119,17 @@ public class UserService {
             throw new UserNotFoundException("User with email " + email + " not found.");
         }
     }
-    public boolean authenticateUser(String email, String password) {
+
+    public UserResponseDTO authenticateUser(String email, String password) {
         DrivingUser user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
 
         // Check if passwords match. Implement in frontend for login purpose
-        return passwordEncoder.matches(password, user.getPassword());
+        if(passwordEncoder.matches(password, user.getPassword())){
+            return convertToResponseDTO(user);
+        }
+        else
+        return null;
     }
 
     public class UserNotFoundException extends RuntimeException {
